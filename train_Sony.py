@@ -2,8 +2,8 @@
 # improvement upon cqf37
 from __future__ import division
 import os, time, scipy.io
-import tensorflow as tf
-import tensorflow.contrib.slim as slim
+import tensorflow.compat.v1 as tf
+import tf_slim as slim
 import numpy as np
 import rawpy
 import glob
@@ -98,7 +98,8 @@ def pack_raw(raw):
                           im[1:H:2, 0:W:2, :]), axis=2)
     return out
 
-
+tf.disable_eager_execution()
+print("Starting training...")
 sess = tf.Session()
 in_image = tf.placeholder(tf.float32, [None, None, None, 4])
 gt_image = tf.placeholder(tf.float32, [None, None, None, 3])
@@ -125,14 +126,17 @@ input_images['250'] = [None] * len(train_ids)
 input_images['100'] = [None] * len(train_ids)
 
 g_loss = np.zeros((5000, 1))
-
+print("preparing data...")
 allfolders = glob.glob(result_dir + '*0')
 lastepoch = 0
 for folder in allfolders:
     lastepoch = np.maximum(lastepoch, int(folder[-4:]))
 
 learning_rate = 1e-4
+
+print("Start training loop!")
 for epoch in range(lastepoch, 4001):
+    print(epoch)
     if os.path.isdir(result_dir + '%04d' % epoch):
         continue
     cnt = 0
