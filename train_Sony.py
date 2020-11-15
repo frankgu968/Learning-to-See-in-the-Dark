@@ -2,6 +2,7 @@
 # improvement upon cqf37
 from __future__ import division
 import os, time, scipy.io
+import scipy.misc
 import tensorflow.compat.v1 as tf
 import tf_slim as slim
 import numpy as np
@@ -99,7 +100,7 @@ def pack_raw(raw):
     return out
 
 tf.disable_eager_execution()
-print("Starting training...")
+print("Starting session...")
 sess = tf.Session()
 in_image = tf.placeholder(tf.float32, [None, None, None, 4])
 gt_image = tf.placeholder(tf.float32, [None, None, None, 3])
@@ -136,7 +137,6 @@ learning_rate = 1e-4
 
 print("Start training loop!")
 for epoch in range(lastepoch, 4001):
-    print(epoch)
     if os.path.isdir(result_dir + '%04d' % epoch):
         continue
     cnt = 0

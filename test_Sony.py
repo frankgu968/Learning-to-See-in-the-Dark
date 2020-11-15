@@ -2,15 +2,15 @@
 # improvement upon cqf37
 from __future__ import division
 import os, scipy.io
-import tensorflow as tf
-import tensorflow.contrib.slim as slim
+import tensorflow.compat.v1 as tf
+import tf_slim as slim
 import numpy as np
 import rawpy
 import glob
 
 input_dir = './dataset/Sony/short/'
 gt_dir = './dataset/Sony/long/'
-checkpoint_dir = './checkpoint/Sony/'
+checkpoint_dir = './result_Sony/'
 result_dir = './result_Sony/'
 
 # get test IDs
@@ -95,6 +95,7 @@ def pack_raw(raw):
                           im[1:H:2, 0:W:2, :]), axis=2)
     return out
 
+tf.disable_eager_execution()
 
 sess = tf.Session()
 in_image = tf.placeholder(tf.float32, [None, None, None, 4])
